@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 简体中文 | [English](./README.en-US.md)
 <h1 align="center">Vue Antd Admin</h1>
 
@@ -58,3 +59,6 @@ $ npm run serve
   <img src="./src/assets/img/alipay.png" width="320px" style="display: inline-block;" />
   <img src="./src/assets/img/wechatpay.png" width="320px" style="display: inline-block; margin-left: 24px;" />
 </p>
+=======
+# Front
+>>>>>>> 60081b3329557deda4711e16be395cf97f6ab94c
