@@ -62,6 +62,7 @@ const options = {
             // }
           ]
         },
+
         {
           path: 'doctor',
           name: '医生页面集',
@@ -96,8 +97,18 @@ const options = {
               },
               component:() => import('@/pages/doctor/pres_check'),
             },
+            {
+              path:'upload',
+              name:'信息提交',
+              meta: 
+              {
+                
+              },
+              component:() => import('@/pages/doctor/upload'),
+            },
           ]
         },
+        
         {
           path: 'dashboard',
           name: 'Dashboard',
