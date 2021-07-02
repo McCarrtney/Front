@@ -63,6 +63,42 @@ const options = {
           ]
         },
         {
+          path: 'doctor',
+          name: '医生页面集',
+          meta:{icon: 'dashboard'},
+          component: BlankView,
+          children: 
+          [
+            {
+              path:'doc_dash',
+              name:'个人主页',
+              meta: 
+              {
+                
+              },
+              component:() => import('@/pages/doctor/doc_dash'),
+            },
+            {
+              path:'user_check',
+              name:'病历数据',
+              meta: 
+              {
+                
+              },
+              component:() => import('@/pages/doctor/user_check'),
+            },
+            {
+              path:'pres_check',
+              name:'处方数据',
+              meta: 
+              {
+                
+              },
+              component:() => import('@/pages/doctor/pres_check'),
+            },
+          ]
+        },
+        {
           path: 'dashboard',
           name: 'Dashboard',
           meta: {
