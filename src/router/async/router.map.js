@@ -81,7 +81,7 @@ const routerMap = {
   },
   application: {
     name: '应用',
-    component: () => import('@/pages/list/search/ApplicationList')
+    component: () => import('@/pages/list/search/ManageDoctor')
   },
   project: {
     name: '项目',
