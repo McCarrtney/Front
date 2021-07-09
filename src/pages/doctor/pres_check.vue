@@ -1,54 +1,89 @@
+<!--
+只有传了text，再传record才能起效！
+-->
 <template>
     <a-card style = "width:100%" title="已创建处方信息">
         <a-table :columns="columns" :data-source="data" >
 
             <template v-for="col in ['pres_id', 'user_id','name']" :slot="col" slot-scope="text">
-                <div :key="col">
+              <div :key="col">
+                {{text}}
+              </div>
+            </template>
+
+            <template v-for="col in ['medicine','description']" :slot="col" slot-scope="text">
+              <div :key="col">
                 {{ text }}
+              </div>
+            </template>
+
+            <template slot="operation" slot-scope="text,record">
+                <div key="operation">
+                    <a-button type="primary" @click="showModal_edit(text,record.key)">
+                    编辑
+                    </a-button>
+                    <a-modal
+                      title="处方信息"
+                      okText = "提交修改"
+                      width = 60%
+                      :visible="list.get(text)"
+                      :confirm-loading="confirmLoading"
+                      @ok="handleOk_save(text,record.key)" 
+                      @cancel="handleCancel_cancel(text,record.key)"
+                    >
+                      <br/>
+                        <font size ="4">
+                        处方ID: {{record.pres_id}} 
+                        <br/>
+                        <br/>
+                        患者ID: {{record.user_id}}
+                        <br/>
+                        <br/>
+                        患者姓名: {{record.name}}
+                        </font>
+                      <br/>
+                      <br/>
+                      
+                        <template>
+                        <font size ="4">药品单</font>
+                        <a-input
+                        v-if="record.editable"
+                        style="margin: 0px 0"
+                        :value="record.medicine"
+                        @change="e => handleChange(e.target.value, record.key, 'medicine')"
+                        />
+                        </template>
+                      <br/>
+                      <br/>
+
+                        <template>
+                        <font size ="4">病情</font> 
+                        <a-input
+                        v-if="record.editable"
+                        style="margin: 0px 0"
+                        :value="record.description"
+                        @change="e => handleChange(e.target.value, record.key, 'description')"
+                        />
+                        </template>
+                      <br/>
+                      <br/>
+                        
+                        <template>
+                        <font size ="4">备注</font>
+                        <a-input
+                        v-if="record.editable"
+                        style="margin: 0px 0"
+                        :value="record.notes"
+                        @change="e => handleChange(e.target.value, record.key, 'notes')"
+                        />
+                        </template>
+                    </a-modal>
                 </div>
             </template>
 
-            <template
-            v-for="col in ['medicine','description']"
-            :slot="col"
-            slot-scope="text, record"
-            >
-                <div :key="col">
-                    <a-input
-                    v-if="record.editable"
-                    style="margin: -5px 0"
-                    :value="text"
-                    @change="e => handleChange(e.target.value, record.key, col)"
-                    />
-                    <template v-else>
-                        {{ text }}
-                    </template>
-                </div>
-            </template>
-            <template slot="operation" slot-scope="text, record">
-                <div class="editable-row-operations">
-                    <span v-if="record.editable">
-                        <a @click="() => save(record.key)">Save</a>
-                        <a-popconfirm title="确认取消?" @confirm="() => cancel(record.key)">
-                            <a>Cancel</a>
-                        </a-popconfirm>
-                    </span>
-                    <span v-else>
-                        <a :disabled="editingKey !== ''" @click="() => edit(record.key)">Edit</a>
-                    </span>
-                </div>
-            </template>
             <p slot="expandedRowRender" slot-scope="record" style="margin: 0">
                 备注：
-                <a-input
-                    v-if="record.editable"
-                    style="margin: 0px 0"
-                    :value="record.notes"
-                    @change="e => handleChange_notes(e.target.value, record.key)"
-                    />
-                    <template v-else>
-                        {{ record.notes }}
-                    </template>
+                {{ record.notes }}
             </p>
         </a-table>
     </a-card>
@@ -61,45 +96,56 @@ const columns = [
     title: '处方编号',
     dataIndex: 'pres_id',
     width: '15%',
+    align: 'center',
     scopedSlots: { customRender: 'pres_id' },
   },
   {
     title: '患者编号',
     dataIndex: 'user_id',
     width: '15%',
+    align: 'center',
     scopedSlots: { customRender: 'user_id' },
   },
   {
     title: '患者姓名',
     dataIndex: 'name',
     width: '10%',
+    align: 'center',
     scopedSlots: { customRender: 'name' },
   },
   {
     title: '药品单',
     dataIndex: 'medicine',
     width: '30%',
+    align: 'center',
     scopedSlots: { customRender: 'medicine' },
   },
   {
     title: '病情',
     dataIndex: 'description',
     width: '50%',
+    align: 'center',
     scopedSlots: { customRender: 'description' },
   },
   {
     title: '编辑',
     dataIndex: 'operation',
+    align: 'center',
     scopedSlots: { customRender: 'operation' },
   },
 ];
 
 const data = [];
+var list = new Object();
+list.add = function(key,value){this[key]=value};
+list.get = function(key){return this[key]};
+
 for (let i = 0; i < 100; i++) {
   data.push({
     key: i.toString(),
     pres_id: 100000+i,
     user_id: 100000+i,
+    operation: 100000+i,
     name : '张三',
     description: "头晕脑涨",
     medicine: "六味地黄丸,蒙脱石散",
@@ -108,7 +154,10 @@ for (let i = 0; i < 100; i++) {
     // age: 32,
     // address: `London Park no. ${i}`
   });
+  list.add(100000+i,false);
 }
+
+
 export default {
   data() {
     this.cacheData = data.map(item => ({ ...item }));
@@ -116,6 +165,9 @@ export default {
       data,
       columns,
       editingKey: '',
+
+      ModalText: 'Content of the modal',
+      list,
     };
   },
   methods: {
@@ -167,7 +219,47 @@ export default {
         this.data = newData;
       }
     },
+    showModal_edit(text,key) {
+      this.list.add(text,true);
+      const newData = [...this.data];
+      const target = newData.filter(item => key === item.key)[0];
+      this.editingKey = key;
+      if (target) {
+        target.editable = true;
+        this.data = newData;
+      }
+    },
+    handleOk_save(text,key) {
+      this.list.add(text,false);
+
+      const newData = [...this.data];
+      const newCacheData = [...this.cacheData];
+      const target = newData.filter(item => key === item.key)[0];
+      const targetCache = newCacheData.filter(item => key === item.key)[0];
+      if (target && targetCache) {
+        delete target.editable;
+        this.data = newData;
+        Object.assign(targetCache, target);
+        this.cacheData = newCacheData;
+      }
+      this.editingKey = '';
+    },
+
+    handleCancel_cancel(text,key) {
+      console.log('Clicked cancel button');
+      this.list.add(text,false);
+
+      const newData = [...this.data];
+      const target = newData.filter(item => key === item.key)[0];
+      this.editingKey = '';
+      if (target) {
+        Object.assign(target, this.cacheData.filter(item => key === item.key)[0]);
+        delete target.editable;
+        this.data = newData;
+      }
+    },
   },
+  
 };
 
 </script>
