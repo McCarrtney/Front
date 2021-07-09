@@ -16,7 +16,7 @@
           @change="handleChange"
           @preview="handlePreview"
         >
-          <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+          <img v-if="imageUrl" :src="imageUrl" alt="avatar" style="height: 128px;width: 128px;" />
           <div v-else>
             <a-icon :type="loading ? 'loading' : 'plus'" />
             <div class="ant-upload-text">
