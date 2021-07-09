@@ -37,7 +37,7 @@
             <a-tooltip title="分享" slot="actions">
               <a-icon type="share-alt" />
             </a-tooltip>
-            <a-avatar src="/doctor_ avatar/002-doctor.png" class="avatar" style="float: left;"/>
+            <a-avatar :src="item.avatar" class="avatar" style="float: left;"/>
             <label style="position: absolute;
                           top: 62.5%;
                           left: 15%;
@@ -84,7 +84,7 @@ for (let i = 0; i < 10; i++) {
     name: "王梓航",
     department: departments[i % 13],
     hospital: hospitals[i % 10],
-    avatar: "/src/assets/img/doctor_ avatar/00" + (i % 10).toString() + "-doctor.png",
+    avatar: "/doctor_ avatar/00" + (i % 10).toString() + "-doctor.png",
   });
   a_doctorData = doctorData;
 }

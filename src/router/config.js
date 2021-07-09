@@ -163,9 +163,17 @@ const options = {
         //   ]
         // },
         {
-          path: 'application',
+          path: 'doctorManage',
           name: '医生管理',
           component: () => import('@/pages/list/search/ManageDoctor'),
+          meta: {
+            icon: 'table'
+          },
+        },
+        {
+          path: 'chatroom',
+          name: '聊天室',
+          component: () => import('@/pages/chatroom/talkSystem'),
           meta: {
             icon: 'table'
           },
