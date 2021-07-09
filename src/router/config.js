@@ -55,11 +55,11 @@ const options = {
               },
               component: () => import('@/pages/user/info/healthInfo'),
             },
-            // {
-            //   path: 'analysis',
-            //   name: '分析页',
-            //   component: () => import('@/pages/dashboard/analysis'),
-            // }
+            {
+              path: 'setting',
+              name: '其他设置',
+              component: () => import('@/pages/dashboard/setting'),
+            },
           ]
         },
 

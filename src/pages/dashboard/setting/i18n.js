@@ -2,9 +2,10 @@ module.exports = {
   messages: {
     CN: {
       pageDesc: '表单页用于向用户收集或验证信息，基础表单常见于数据项较少的表单场景。',
-      title: '标题',
+      avatar: '头像',
+      title: '姓名',
       titleInput: '给目标起个名字',
-      date: '起止日期',
+      date: '生日',
       describe: '目标描述',
       describeInput: '请输入你阶段性工作目标',
       metrics: '衡量标准',
