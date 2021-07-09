@@ -1,45 +1,59 @@
 <template>
     <a-card style = "width:100%" title="已接诊病人信息">
-        <a-tabs default-active-key="1">
-            <a-tab-pane key="1" tab="列表模式">
-                <a-table :columns="columns" :data-source="data" >
-                    <template
-                    v-for="col in ['name', 'age', 'address']"
-                    :slot="col"
-                    slot-scope="text, record"
+        <a-table :columns="columns" :data-source="data" >
+
+            <template v-for="col in ['user_id','name','address']" :slot="col" slot-scope="text">
+              <div :key="col">
+                {{text}}
+              </div>
+            </template>
+
+            <template slot="operation" slot-scope="text,record">
+                <div key="operation">
+                    <a-button type="primary" @click="showModal(text)">
+                    详情
+                    </a-button>
+                    <a-modal
+                      title="详细信息"
+                      width = 60%
+                      cloasble= clo
+                      :visible="list.get(text)"
+                      :footer="null"
+                      :closable="clo"
                     >
-                        <div :key="col">
-                            <a-input
-                            v-if="record.editable"
-                            style="margin: -5px 0"
-                            :value="text"
-                            @change="e => handleChange(e.target.value, record.key, col)"
-                            />
-                            <template v-else>
-                                {{ text }}
-                            </template>
-                        </div>
+                    <template>
+                      <a-card title ="患者信息" style="text-align=left">
+                        <p style="fontSize: 16px;color: rgba(0, 0, 0, 0.85); marginBottom: 16px;fontWeight: 500">
+                          患者ID: {{record.user_id}}
+                        </p>
+                        <a-card title="姓名">
+                          <h style="fontSize: 16px;">
+                          {{record.name}}
+                          </h>
+                        </a-card>
+                        <a-card title="地址" :style="{ marginTop: '16px' }">
+                          <h style="fontSize: 16px;">
+                          {{record.address}}
+                          </h>
+                        </a-card>
+                        <a-card title="开具处方记录" :style="{ marginTop: '16px' }">
+                          <h style="fontSize: 16px;">
+                          {{record.pres_list}}
+                          </h>
+                        </a-card>
+                      </a-card>
                     </template>
-                    <template slot="operation" slot-scope="text, record">
-                        <div class="editable-row-operations">
-                            <span v-if="record.editable">
-                                <a @click="() => save(record.key)">Save</a>
-                                <a-popconfirm title="确认取消?" @confirm="() => cancel(record.key)">
-                                    <a>Cancel</a>
-                                </a-popconfirm>
-                            </span>
-                            <span v-else>
-                                <a :disabled="editingKey !== ''" @click="() => edit(record.key)">Edit</a>
-                            </span>
-                        </div>
-                    </template>
-                </a-table>
-            </a-tab-pane>
-            <a-tab-pane key="2" tab="汇报模式">
-                已预约，未诊疗 饼状图？
-                每日预约数 柱状图
-            </a-tab-pane>
-        </a-tabs>
+                    <br/>
+                    <br/>  
+                      <div style="text-align:right">
+                      <a-button type="primary" @click="handleCancel(text)">
+                        返回
+                      </a-button>
+                      </div>
+                    </a-modal>
+                </div>
+            </template>
+        </a-table>
     </a-card>
 </template>
 
@@ -47,39 +61,68 @@
 
 const columns = [
   {
-    title: 'name',
+    title: '患者编号',
+    dataIndex: 'user_id',
+    width: '15%',
+    align: 'center',
+    scopedSlots: { customRender: 'user_id' },
+  },
+  {
+    title: '患者姓名',
     dataIndex: 'name',
-    width: '25%',
+    width: '15%',
+    align: 'center',
     scopedSlots: { customRender: 'name' },
   },
   {
-    title: 'age',
-    dataIndex: 'age',
-    width: '15%',
-    scopedSlots: { customRender: 'age' },
-  },
-  {
-    title: 'address',
+    title: '地址',
     dataIndex: 'address',
-    width: '40%',
+    width: '30%',
+    align: 'center',
     scopedSlots: { customRender: 'address' },
   },
+  /*{
+    title: '处方号',
+    dataIndex: 'pres_list',
+    width: '50%',
+    align: 'center',
+    scopedSlots: { customRender: 'pres_list' },
+  },*/
+  /*{
+    title:'头像',
+    dataIndex:'photo',
+    render:(record) => (<img src={require(record)}/>),
+    scopedSlots: { customRender: 'photo' },
+  },*/
   {
-    title: 'operation',
+    title: '详情',
     dataIndex: 'operation',
+    align: 'center',
     scopedSlots: { customRender: 'operation' },
   },
 ];
 
 const data = [];
+var list = new Object();
+list.add = function(key,value){this[key]=value};
+list.get = function(key){return this[key]};
+
 for (let i = 0; i < 100; i++) {
   data.push({
     key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
+    user_id: 100000+i,
+    address: '杭州',
+    name : '张三',
+    pres_list: '10111',
+    operation: 100000+i,
+    photo: '/src/assets/img/logo.png',
+    // name: `Edrward ${i}`,
+    // age: 32,
+    // address: `London Park no. ${i}`
   });
+  list.add(100000+i,false);
 }
+
 
 export default {
   data() {
@@ -88,48 +131,20 @@ export default {
       data,
       columns,
       editingKey: '',
+      clo:false,
+
+      ModalText: 'Content of the modal',
+      list,
     };
   },
   methods: {
-    handleChange(value, key, column) {
-      const newData = [...this.data];
-      const target = newData.filter(item => key === item.key)[0];
-      if (target) {
-        target[column] = value;
-        this.data = newData;
-      }
+    showModal(text) {
+      this.list.add(text,true);
     },
-    edit(key) {
-      const newData = [...this.data];
-      const target = newData.filter(item => key === item.key)[0];
-      this.editingKey = key;
-      if (target) {
-        target.editable = true;
-        this.data = newData;
-      }
-    },
-    save(key) {
-      const newData = [...this.data];
-      const newCacheData = [...this.cacheData];
-      const target = newData.filter(item => key === item.key)[0];
-      const targetCache = newCacheData.filter(item => key === item.key)[0];
-      if (target && targetCache) {
-        delete target.editable;
-        this.data = newData;
-        Object.assign(targetCache, target);
-        this.cacheData = newCacheData;
-      }
-      this.editingKey = '';
-    },
-    cancel(key) {
-      const newData = [...this.data];
-      const target = newData.filter(item => key === item.key)[0];
-      this.editingKey = '';
-      if (target) {
-        Object.assign(target, this.cacheData.filter(item => key === item.key)[0]);
-        delete target.editable;
-        this.data = newData;
-      }
+
+    handleCancel(text) {
+      console.log('Clicked cancel button');
+      this.list.add(text,false);
     },
   },
 };
@@ -140,5 +155,14 @@ export default {
 .editable-row-operations a {
   margin-right: 8px;
 }
+.left{
+    width: 60%;
+    float: left;
+    text-align: center;
+}
+.right{
+   width:40%;
+   float: right;
+    text-align: center;
+}
 </style>
-

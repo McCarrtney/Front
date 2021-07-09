@@ -31,52 +31,46 @@
                       @ok="handleOk_save(text,record.key)" 
                       @cancel="handleCancel_cancel(text,record.key)"
                     >
-                      <br/>
-                        <font size ="4">
-                        处方ID: {{record.pres_id}} 
-                        <br/>
-                        <br/>
-                        患者ID: {{record.user_id}}
-                        <br/>
-                        <br/>
-                        患者姓名: {{record.name}}
-                        </font>
-                      <br/>
-                      <br/>
-                      
-                        <template>
-                        <font size ="4">药品单</font>
-                        <a-input
-                        v-if="record.editable"
-                        style="margin: 0px 0"
-                        :value="record.medicine"
-                        @change="e => handleChange(e.target.value, record.key, 'medicine')"
-                        />
-                        </template>
-                      <br/>
-                      <br/>
+                      <a-card title ="处方单">
+                        <p style="fontSize: 16px;color: rgba(0, 0, 0, 0.85); marginBottom: 16px;fontWeight: 500">
+                          处方ID: {{record.pres_id}}
+                        </p>
 
-                        <template>
-                        <font size ="4">病情</font> 
-                        <a-input
-                        v-if="record.editable"
-                        style="margin: 0px 0"
-                        :value="record.description"
-                        @change="e => handleChange(e.target.value, record.key, 'description')"
-                        />
-                        </template>
-                      <br/>
-                      <br/>
-                        
-                        <template>
-                        <font size ="4">备注</font>
-                        <a-input
-                        v-if="record.editable"
-                        style="margin: 0px 0"
-                        :value="record.notes"
-                        @change="e => handleChange(e.target.value, record.key, 'notes')"
-                        />
-                        </template>
+                        <a-card title="患者ID">
+                          <h style="fontSize: 16px;">
+                          {{record.user_id}}
+                          </h>
+                        </a-card>
+                        <a-card title="患者姓名">
+                          <h style="fontSize: 16px;">
+                          {{record.name}}
+                          </h>
+                        </a-card>
+                        <a-card title="药品单" :style="{ marginTop: '16px' }">
+                          <a-input
+                          v-if="record.editable"
+                          style="margin: 0px 0"
+                          :value="record.medicine"
+                          @change="e => handleChange(e.target.value, record.key, 'medicine')"
+                          />
+                        </a-card>
+                        <a-card title="病情" :style="{ marginTop: '16px' }">
+                          <a-input
+                          v-if="record.editable"
+                          style="margin: 0px 0"
+                          :value="record.description"
+                          @change="e => handleChange(e.target.value, record.key, 'description')"
+                          />
+                        </a-card>
+                        <a-card title="备注" :style="{ marginTop: '16px' }">
+                          <a-input
+                          v-if="record.editable"
+                          style="margin: 0px 0"
+                          :value="record.notes"
+                          @change="e => handleChange(e.target.value, record.key, 'notes')"
+                          />
+                        </a-card>
+                      </a-card>
                     </a-modal>
                 </div>
             </template>
@@ -109,7 +103,7 @@ const columns = [
   {
     title: '患者姓名',
     dataIndex: 'name',
-    width: '10%',
+    width: '15%',
     align: 'center',
     scopedSlots: { customRender: 'name' },
   },
